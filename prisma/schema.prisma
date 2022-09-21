@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  uuid       String
+  email      String?
+  password   String?
+  source     String?
+  profile_id Int?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map(name: "user")
+}
+
+model Verifications {
+  id                Int      @id @default(autoincrement())
+  user_id           Int?
+  verification_code String
+  invalid_attempts  Int
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map(name: "verifications")
+}
