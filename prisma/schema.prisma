@@ -8,25 +8,27 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  uuid       String
-  email      String?
-  password   String?
-  source     String?
-  profile_id Int?
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id              Int            @id @default(autoincrement())
+  uuid            String         @default(uuid()) @unique
+  email           String
+  password        String
+  source          String?
+  profile_id      Int?
+  verificationsId Int?
+  verification    Verifications? @relation(fields: [verificationsId], references: [id])
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
 
   @@map(name: "user")
 }
 
 model Verifications {
   id                Int      @id @default(autoincrement())
-  user_id           Int?
   verification_code String
-  invalid_attempts  Int
+  invalid_attempts  Int      @default(0)
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
+  User              User[]
 
   @@map(name: "verifications")
 }
