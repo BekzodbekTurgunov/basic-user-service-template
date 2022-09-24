@@ -7,10 +7,10 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.send('Welcome to our authentication template');
+    res.send('Welcome to our authentication');
   });
 
-  const port = process.env.PORT || 8888;
+const port = process.env.PORT || 8888;
 app.use('/api', routers)
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);

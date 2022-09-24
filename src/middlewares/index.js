@@ -1,5 +1,7 @@
 const authJWT = require('./authJWT')
+const checkEMailExist = require('./checkEmailExist')
 
 module.exports = {
-    authJWT
+    authJWT,
+    checkEMailExist
 }

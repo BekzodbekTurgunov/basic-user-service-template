@@ -16,8 +16,8 @@ const checkJwt = (req, res, next) => {
     return;
   }
 
-  if (typeof jwtPayload === 'object' && jwtPayload.userId) {
-    req.user = { userId: jwtPayload.userId };
+  if (typeof jwtPayload === 'object' && jwtPayload.uuid) {
+    req.user = { uuid: jwtPayload.uuid };
   }
 
   next();

@@ -8,27 +8,61 @@ datasource db {
 }
 
 model User {
-  id              Int            @id @default(autoincrement())
-  uuid            String         @default(uuid()) @unique
-  email           String
+  id              Int           @id @default(autoincrement())
+  uuid            String        @unique @default(uuid())
+  email           String        @unique
   password        String
   source          String?
+  status          UserStatus    @default(UNCONFIRMED)
   profile_id      Int?
   verificationsId Int?
-  verification    Verifications? @relation(fields: [verificationsId], references: [id])
-  createdAt       DateTime       @default(now()) @map("created_at")
-  updatedAt       DateTime       @updatedAt @map("updated_at")
-
+  verification    Verification? @relation(fields: [verificationsId], references: [id])
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  Profile         Profile?
   @@map(name: "user")
 }
 
-model Verifications {
-  id                Int      @id @default(autoincrement())
-  verification_code String
-  invalid_attempts  Int      @default(0)
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
-  User              User[]
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  UNCONFIRMED
+}
+
+model Verification {
+  id               Int       @id @default(autoincrement())
+  code             String
+  invalid_attempts Int       @default(0)
+  codeExpiredAt    DateTime?
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  User             User[]
 
   @@map(name: "verifications")
+}
+
+model Profile {
+  id          Int          @id @default(autoincrement())
+  username    String?
+  first_name  String?
+  last_name   String?
+  userId      Int          @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  perpissions Permission[]
+
+  @@map(name: "profile")
+}
+
+model Permission {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  resourse  String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  profileId Int?
+
+  @@map(name: "permission")
 }
